@@ -22,6 +22,9 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.connect.mirror.MirrorMakerConfig;
+import org.apache.kafka.connect.mirror.MirrorSourceConnector;
+import org.apache.kafka.connect.mirror.SourceAndTarget;
 import org.apache.kafka.connect.util.TopicAdmin;
 
 import java.util.*;
@@ -108,5 +111,15 @@ final class MirrorUtils {
 
     static void createSinglePartitionCompactedTopic(String topicName, short replicationFactor, Map<String, Object> adminProps) {
         createCompactedTopic(topicName, (short) 1, replicationFactor, adminProps);
+    }
+
+    static SourceAndTarget getEnabledSourceAndTarget(MirrorMakerConfig mirrorMakerConfig){
+        return mirrorMakerConfig.clusterPairs()
+                .stream().filter(c -> {
+                    Map<String, String> props = mirrorMakerConfig.connectorBaseConfig(c, MirrorSourceConnector.class);
+                    MirrorConnectorConfig config = new MirrorConnectorConfig(props);
+                    return config.enabled();
+                }).findFirst().get();
+
     }
 }

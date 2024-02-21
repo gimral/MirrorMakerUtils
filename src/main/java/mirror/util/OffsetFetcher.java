@@ -15,9 +15,9 @@ public class OffsetFetcher {
     private final ReplicationPolicy replicationPolicy;
     private final SourceAndTarget sourceAndTarget;
 
-    public OffsetFetcher(MirrorMakerConfig mirrorConfig) {
-        sourceAndTarget = mirrorConfig.clusterPairs().get(0);
-        Map<String, String> props = mirrorConfig.connectorBaseConfig(sourceAndTarget, MirrorSourceConnector.class);
+    public OffsetFetcher(MirrorMakerConfig mirrorMakerConfig) {
+        sourceAndTarget = MirrorUtils.getEnabledSourceAndTarget(mirrorMakerConfig);
+        Map<String, String> props = mirrorMakerConfig.connectorBaseConfig(sourceAndTarget, MirrorSourceConnector.class);
         MirrorConnectorConfig config = new MirrorConnectorConfig(props);
 
         sourceAdminClient = AdminClient.create(config.sourceAdminConfig());

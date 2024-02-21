@@ -1,0 +1,1 @@
+docker-compose -f docker-compose-bidirectional.yaml down

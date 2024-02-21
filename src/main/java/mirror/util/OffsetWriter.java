@@ -34,7 +34,7 @@ public class OffsetWriter {
         if(mirrorMakerConfig.clusterPairs().isEmpty())
             throw new IllegalArgumentException("No source->target replication flows.");
 
-        SourceAndTarget sourceAndTarget = mirrorMakerConfig.clusterPairs().get(0);
+        SourceAndTarget sourceAndTarget = MirrorUtils.getEnabledSourceAndTarget(mirrorMakerConfig);
         sourceClusterAlias = sourceAndTarget.source();
 
         Plugins plugins = new Plugins(new HashMap<>());
